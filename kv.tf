@@ -28,6 +28,15 @@ resource "azurerm_role_assignment" "cmk_user" {
   role_definition_name = "Key Vault Crypto Service Encryption User"
 }
 
+resource "azurerm_role_assignment" "cmk_vault" {
+  depends_on = [
+    azurerm_key_vault_key.cmk
+  ]
+  principal_id         = azurerm_data_protection_backup_vault.vault.identity[0].principal_id
+  scope                = azurerm_key_vault.kv.id
+  role_definition_name = "Key Vault Crypto Service Encryption User"
+}
+
 resource "azurerm_key_vault_key" "cmk" {
   depends_on = [
     azurerm_role_assignment.write_keys
