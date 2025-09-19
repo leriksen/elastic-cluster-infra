@@ -69,23 +69,3 @@ resource "azurerm_private_dns_zone_virtual_network_link" "vnet_zone" {
     azurerm_subnet.pe01
   ]
 }
-
-resource "azurerm_network_interface" "nic01" {
-  name                = "nic01"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-  ip_configuration {
-    name                          = "public"
-    private_ip_address_allocation = "Dynamic"
-    subnet_id                     = azurerm_subnet.pe01.id
-    public_ip_address_id          = azurerm_public_ip.ip01.id
-  }
-}
-
-resource "azurerm_public_ip" "ip01" {
-  location            = azurerm_resource_group.rg.location
-  name                = "ip01"
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Static"
-}
