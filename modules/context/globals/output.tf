@@ -18,6 +18,22 @@ output "backup_retention_days" {
   value = "7"
 }
 
+output bv_datastore_type {
+  value = "VaultStore"
+}
+
+output bv_immutability {
+  value = "Disabled"
+}
+
+output bv_redundancy {
+  value = "LocallyRedundant"
+}
+
+output bv_soft_delete {
+  value = "Off"
+}
+
 output "cluster_size" {
   value = "2"
 }
