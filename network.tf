@@ -27,20 +27,6 @@ resource "azurerm_subnet_network_security_group_association" "pe01_nsg01" {
   subnet_id                 = azurerm_subnet.pe01.id
 }
 
-resource "azurerm_network_security_rule" "psql_in" {
-  name                        = "in_allow_psql"
-  priority                    = 100
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "5432"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg01.name
-}
-
 resource "azurerm_network_security_rule" "ssh_in" {
   name                        = "in_allow_ssh"
   priority                    = 200
