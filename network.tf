@@ -41,28 +41,6 @@ resource "azurerm_network_security_rule" "ssh_in" {
   network_security_group_name = azurerm_network_security_group.nsg01.name
 }
 
-resource "azurerm_network_security_rule" "psql_in" {
-  for_each = {
-    for index, port in [
-      "5432",
-      "6432",
-      "8432"
-    ] : index => port
-  }
-
-  name                        = format("in_allow_psql_%s", each.value)
-  priority                    = 250 + each.key
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = each.value
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg01.name
-}
-
 resource "azurerm_private_dns_zone" "psql" {
   name                = "privatelink.postgres.database.azure.com"
   resource_group_name = azurerm_resource_group.rg.name
