@@ -7,10 +7,6 @@ resource "azurerm_key_vault" "kv" {
   purge_protection_enabled   = true
   soft_delete_retention_days = 7
   rbac_authorization_enabled = true
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
 }
 
 resource "azurerm_role_assignment" "write_keys" {
@@ -19,7 +15,7 @@ resource "azurerm_role_assignment" "write_keys" {
   role_definition_name = "Key Vault Crypto Officer"
 }
 
-resource "azurerm_role_assignment" "cmk_user" {
+resource "azurerm_role_assignment" "cmk_umi" {
   depends_on = [
     azurerm_key_vault_key.cmk
   ]
@@ -41,6 +37,13 @@ resource "azurerm_key_vault_key" "cmk" {
   depends_on = [
     azurerm_role_assignment.write_keys
   ]
+
+  lifecycle {
+    ignore_changes = [
+      expiration_date
+    ]
+  }
+
   key_vault_id = azurerm_key_vault.kv.id
   name         = "cmk"
   key_type     = "RSA"
