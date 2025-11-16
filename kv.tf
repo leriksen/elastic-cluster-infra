@@ -1,6 +1,6 @@
 resource "azurerm_key_vault" "kv" {
   location                   = azurerm_resource_group.rg.location
-  name                       = "psqlkv01"
+  name                       = "psqlkv02"
   resource_group_name        = azurerm_resource_group.rg.name
   sku_name                   = "standard"
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -9,10 +9,25 @@ resource "azurerm_key_vault" "kv" {
   rbac_authorization_enabled = true
 }
 
+# resource "azurerm_role_assignment" "self_read_secrets" {
+#   depends_on = [
+#     azurerm_role_assignment.write_secrets
+#   ]
+#   principal_id         = data.azuread_user.self.object_id
+#   scope                = azurerm_key_vault.kv.id
+#   role_definition_name = "Key Vault Secrets User"
+# }
+
 resource "azurerm_role_assignment" "write_keys" {
   principal_id         = data.azurerm_client_config.current.object_id
   scope                = azurerm_key_vault.kv.id
   role_definition_name = "Key Vault Crypto Officer"
+}
+
+resource "azurerm_role_assignment" "write_secrets" {
+  principal_id         = data.azurerm_client_config.current.object_id
+  scope                = azurerm_key_vault.kv.id
+  role_definition_name = "Key Vault Secrets Officer"
 }
 
 resource "azurerm_role_assignment" "cmk_umi" {
